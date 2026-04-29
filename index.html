@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Families Night Out — Babysitting Co-op</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDF8F2;
+    --warm-white: #FFFDF9;
+    --ink: #1A1207;
+    --brown: #5C3D1E;
+    --amber: #D4821A;
+    --amber-light: #F5A623;
+    --amber-muted: #F0D9B0;
+    --sage: #6B8F71;
+    --sage-light: #C8DBC9;
+    --rose: #C0555A;
+    --rose-light: #F2DCDD;
+    --slate: #4A5568;
+    --border: #E8DDD0;
+    --shadow: rgba(92,61,30,0.12);
+    --orange: #E07B30;
+    --orange-light: #FDE8D5;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--ink); min-height:100vh; padding-bottom:60px; }
+
+  /* HEADER */
+  header { background:var(--ink); padding:22px 24px 18px; text-align:center; position:relative; overflow:hidden; }
+  header::before { content:''; position:absolute; top:-40px; left:-40px; width:200px; height:200px; background:radial-gradient(circle,rgba(212,130,26,0.25) 0%,transparent 70%); border-radius:50%; }
+  header::after  { content:''; position:absolute; bottom:-60px; right:-20px; width:180px; height:180px; background:radial-gradient(circle,rgba(107,143,113,0.2) 0%,transparent 70%); border-radius:50%; }
+  .logo-emoji { font-size:1.9rem; display:block; margin-bottom:3px; }
+  header h1 { font-family:'Playfair Display',serif; color:var(--cream); font-size:clamp(1.4rem,5vw,2.1rem); font-weight:900; letter-spacing:-0.5px; line-height:1.1; }
+  header h1 span { color:var(--amber-light); }
+  header p { color:rgba(253,248,242,0.5); font-size:0.8rem; margin-top:4px; font-weight:300; }
+
+  /* NAV */
+  .nav-tabs { display:flex; background:var(--ink); padding:0 10px 13px; gap:4px; overflow-x:auto; scrollbar-width:none; }
+  .nav-tabs::-webkit-scrollbar { display:none; }
+  .tab-btn { flex:1; min-width:62px; padding:8px 8px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); color:rgba(253,248,242,0.65); border-radius:9px; font-family:'DM Sans',sans-serif; font-size:0.68rem; font-weight:500; cursor:pointer; transition:all 0.2s; white-space:nowrap; text-align:center; line-height:1.3; }
+  .tab-btn.active { background:var(--amber); border-color:var(--amber); color:white; font-weight:600; }
+  .tab-btn:hover:not(.active) { background:rgba(255,255,255,0.12); color:var(--cream); }
+
+  /* NEEDS-COVERAGE ALERT BAR */
+  .coverage-bar { background:linear-gradient(135deg,var(--orange) 0%,#C55A10 100%); color:white; padding:12px 16px; display:none; cursor:pointer; }
+  .coverage-bar.visible { display:block; }
+  .coverage-bar-inner { max-width:640px; margin:0 auto; display:flex; align-items:center; gap:10px; }
+  .coverage-bar p { font-size:0.82rem; font-weight:600; flex:1; }
+  .coverage-bar span { font-size:0.72rem; opacity:0.85; }
+
+  .main { padding:16px 14px; max-width:640px; margin:0 auto; }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; animation:fadeIn 0.22s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+
+  .section-label { font-size:0.67rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--amber); margin-bottom:10px; }
+
+  /* CARDS */
+  .card { background:var(--warm-white); border:1px solid var(--border); border-radius:16px; padding:17px; margin-bottom:13px; box-shadow:0 2px 8px var(--shadow); }
+  .card-title { font-family:'Playfair Display',serif; font-size:0.98rem; font-weight:700; color:var(--brown); margin-bottom:11px; display:flex; align-items:center; gap:8px; }
+
+  /* FORMS */
+  label { display:block; font-size:0.75rem; font-weight:600; color:var(--slate); margin-bottom:4px; }
+  input,select,textarea { width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:10px; font-family:'DM Sans',sans-serif; font-size:0.87rem; color:var(--ink); background:var(--cream); margin-bottom:10px; transition:border-color 0.2s,box-shadow 0.2s; outline:none; }
+  input:focus,select:focus,textarea:focus { border-color:var(--amber); box-shadow:0 0 0 3px rgba(212,130,26,0.12); }
+  textarea { resize:vertical; min-height:70px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  /* BUTTONS */
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:10px 18px; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; border:none; transition:all 0.2s; }
+  .btn-primary { background:var(--amber); color:white; width:100%; padding:12px; }
+  .btn-primary:hover { background:#B86F10; transform:translateY(-1px); box-shadow:0 4px 12px rgba(212,130,26,0.35); }
+  .btn-secondary { background:transparent; color:var(--brown); border:1.5px solid var(--border); font-size:0.79rem; padding:8px 13px; }
+  .btn-secondary:hover { border-color:var(--amber); color:var(--amber); }
+  .btn-sage { background:var(--sage); color:white; width:100%; padding:12px; }
+  .btn-sage:hover { background:#567358; }
+  .btn-orange { background:var(--orange); color:white; width:100%; padding:12px; }
+  .btn-orange:hover { background:#C55A10; }
+
+  /* FAMILIES */
+  .family-list { display:flex; flex-direction:column; gap:9px; }
+  .family-item { background:var(--cream); border:1px solid var(--border); border-radius:12px; padding:11px 13px; display:flex; align-items:center; gap:10px; transition:box-shadow 0.2s; }
+  .family-item:hover { box-shadow:0 2px 8px var(--shadow); }
+  .family-avatar { width:38px; height:38px; background:var(--amber-muted); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--brown); flex-shrink:0; }
+  .family-info { flex:1; min-width:0; }
+  .family-name { font-weight:600; font-size:0.88rem; color:var(--ink); }
+  .family-detail { font-size:0.71rem; color:var(--slate); margin-top:1px; }
+  .family-credits { background:var(--amber-muted); color:var(--brown); font-size:0.67rem; font-weight:700; padding:3px 7px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+  .credits-zero { background:var(--rose-light); color:var(--rose); }
+  .notes-pill { display:inline-flex; align-items:center; gap:3px; font-size:0.67rem; background:var(--amber-muted); color:var(--brown); padding:2px 7px; border-radius:10px; margin-top:3px; cursor:pointer; border:none; font-family:'DM Sans',sans-serif; font-weight:500; }
+
+  /* STATUS BADGES */
+  .status-badge { display:inline-flex; align-items:center; gap:4px; font-size:0.66rem; font-weight:700; padding:3px 9px; border-radius:20px; letter-spacing:0.3px; white-space:nowrap; }
+  .badge-confirmed  { background:var(--sage-light); color:var(--sage); }
+  .badge-needs-coverage { background:var(--orange-light); color:var(--orange); border:1px solid rgba(224,123,48,0.3); }
+  .badge-open       { background:rgba(74,85,104,0.1); color:var(--slate); }
+
+  /* NEEDS COVERAGE CARDS in list */
+  .slot-card { background:var(--warm-white); border:1.5px solid var(--border); border-radius:14px; padding:13px; margin-bottom:11px; box-shadow:0 1px 5px var(--shadow); }
+  .slot-card.needs-coverage { border-color:var(--orange); background:linear-gradient(135deg,#FFFDF9 0%,#FFF3EB 100%); }
+  .slot-card.confirmed { border-color:var(--sage); }
+  .slot-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:9px; gap:8px; }
+  .slot-date { font-family:'Playfair Display',serif; font-size:0.92rem; font-weight:700; color:var(--brown); }
+  .slot-time { font-size:0.7rem; color:var(--slate); margin-top:1px; }
+  .slot-section-title { font-size:0.65rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; margin-top:8px; }
+  .slot-section-title.date-title  { color:var(--rose); }
+  .slot-section-title.watch-title { color:var(--sage); }
+  .slot-signup { background:var(--cream); border-radius:8px; padding:6px 9px; font-size:0.79rem; color:var(--ink); display:flex; align-items:center; gap:6px; margin-bottom:3px; border:1px solid var(--border); }
+  .slot-empty  { font-size:0.76rem; color:rgba(74,85,104,0.5); font-style:italic; padding:2px 0; }
+  .host-badge  { font-size:0.6rem; background:var(--amber); color:white; padding:2px 6px; border-radius:8px; font-weight:600; margin-left:auto; }
+
+  /* NEEDS COVERAGE CTA in list */
+  .coverage-cta { margin-top:10px; background:var(--orange-light); border:1px solid rgba(224,123,48,0.3); border-radius:10px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .coverage-cta p { font-size:0.77rem; color:var(--orange); font-weight:600; }
+  .coverage-cta button { background:var(--orange); color:white; border:none; border-radius:8px; padding:7px 12px; font-size:0.75rem; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; white-space:nowrap; transition:background 0.2s; }
+  .coverage-cta button:hover { background:#C55A10; }
+
+  /* CALENDAR */
+  .cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:13px; }
+  .cal-month { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--brown); }
+  .cal-arrow { background:none; border:1.5px solid var(--border); color:var(--brown); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+  .cal-arrow:hover { border-color:var(--amber); color:var(--amber); }
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+  .cal-dow { text-align:center; font-size:0.6rem; font-weight:600; color:var(--slate); padding:3px 0 5px; letter-spacing:0.5px; text-transform:uppercase; }
+  .cal-day { aspect-ratio:1; border-radius:9px; padding:3px; font-size:0.7rem; font-weight:500; color:var(--slate); background:transparent; cursor:default; display:flex; flex-direction:column; align-items:center; min-height:44px; position:relative; transition:all 0.15s; }
+  .cal-day.empty { pointer-events:none; }
+  .cal-day.today .day-num { background:var(--ink); color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .cal-day.has-signup { background:var(--warm-white); border:1.5px solid var(--border); cursor:pointer; }
+  .cal-day.has-signup:hover { border-color:var(--amber); box-shadow:0 2px 8px var(--shadow); transform:translateY(-1px); }
+  .cal-day.past { opacity:0.35; pointer-events:none; }
+  .cal-day.needs-coverage { background:var(--orange-light); border:1.5px solid var(--orange); cursor:pointer; }
+  .cal-day.needs-coverage:hover { box-shadow:0 2px 8px rgba(224,123,48,0.3); transform:translateY(-1px); }
+  .cal-day.confirmed { background:#EEF6EF; border:1.5px solid var(--sage); cursor:pointer; }
+  .cal-day.confirmed:hover { box-shadow:0 2px 8px rgba(107,143,113,0.25); transform:translateY(-1px); }
+  .day-num { width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:0.7rem; margin-bottom:1px; }
+  .day-dots { display:flex; gap:2px; flex-wrap:wrap; justify-content:center; }
+  .day-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+  .dot-date  { background:var(--rose); }
+  .dot-watch { background:var(--sage); }
+  .cal-day.has-signup .day-num,
+  .cal-day.needs-coverage .day-num,
+  .cal-day.confirmed .day-num { color:var(--brown); font-weight:700; }
+
+  /* CAL LEGEND */
+  .cal-legend { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:11px; }
+  .leg-item { display:flex; align-items:center; gap:4px; font-size:0.69rem; color:var(--slate); }
+  .leg-swatch { width:12px; height:12px; border-radius:3px; border:1.5px solid; }
+  .leg-needs  { background:var(--orange-light); border-color:var(--orange); }
+  .leg-confirmed { background:#EEF6EF; border-color:var(--sage); }
+  .leg-open   { background:var(--warm-white); border-color:var(--border); }
+
+  /* DAY DETAIL */
+  .day-detail { background:var(--warm-white); border:1.5px solid var(--amber); border-radius:14px; padding:15px; margin-top:11px; animation:fadeIn 0.2s ease; }
+  .day-detail.detail-needs { border-color:var(--orange); }
+  .day-detail.detail-confirmed { border-color:var(--sage); }
+  .day-detail-title { font-family:'Playfair Display',serif; font-size:0.98rem; font-weight:700; color:var(--brown); margin-bottom:10px; display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+  .detail-close { background:none; border:none; font-size:1rem; cursor:pointer; color:var(--slate); flex-shrink:0; }
+
+  /* ALERT PANEL */
+  .alert-panel { background:linear-gradient(135deg,#1A1207 0%,#2D1E0A 100%); border-radius:14px; padding:17px; color:var(--cream); margin-bottom:13px; }
+  .alert-panel h3 { font-family:'Playfair Display',serif; font-size:0.93rem; font-weight:700; margin-bottom:4px; }
+  .alert-panel p  { font-size:0.77rem; opacity:0.6; margin-bottom:11px; }
+  .alert-panel input,.alert-panel select,.alert-panel textarea { background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.15); color:var(--cream); }
+  .alert-panel input::placeholder,.alert-panel textarea::placeholder { color:rgba(253,248,242,0.32); }
+  .alert-panel input:focus,.alert-panel select:focus,.alert-panel textarea:focus { border-color:var(--amber-light); box-shadow:0 0 0 3px rgba(245,166,35,0.18); }
+  .alert-panel select option { background:#1A1207; }
+  .alert-panel label { color:rgba(253,248,242,0.62); }
+
+  /* NEEDS COVERAGE ALERT PANEL */
+  .coverage-alert-panel { background:linear-gradient(135deg,var(--orange) 0%,#9D4010 100%); border-radius:14px; padding:17px; color:white; margin-bottom:13px; }
+  .coverage-alert-panel h3 { font-family:'Playfair Display',serif; font-size:0.93rem; font-weight:700; margin-bottom:4px; }
+  .coverage-alert-panel p { font-size:0.77rem; opacity:0.8; margin-bottom:11px; }
+  .coverage-alert-panel label { color:rgba(255,255,255,0.75); }
+  .coverage-alert-panel select { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.2); color:white; }
+  .coverage-alert-panel select option { background:#7A2E0A; }
+
+  .status-msg { padding:10px 13px; border-radius:10px; font-size:0.8rem; font-weight:500; margin-bottom:9px; display:none; }
+  .status-success { background:var(--sage-light); color:var(--sage); border:1px solid rgba(107,143,113,0.3); display:block; }
+  .status-error   { background:var(--rose-light); color:var(--rose); border:1px solid rgba(192,85,90,0.3); display:block; }
+  .status-loading { background:var(--amber-muted); color:var(--brown); border:1px solid rgba(212,130,26,0.3); display:block; }
+
+  .divider { height:1px; background:var(--border); margin:13px 0; }
+  .empty-state { text-align:center; padding:34px 20px; color:var(--slate); }
+  .empty-state .icon { font-size:2rem; margin-bottom:7px; opacity:0.45; }
+  .empty-state p { font-size:0.82rem; opacity:0.65; }
+
+  .spinner { display:inline-block; width:12px; height:12px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  /* MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(26,18,7,0.6); z-index:100; padding:18px; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--warm-white); border-radius:16px; padding:20px; width:100%; max-width:420px; max-height:82vh; overflow-y:auto; box-shadow:0 20px 60px rgba(26,18,7,0.4); animation:modalIn 0.22s ease; }
+  @keyframes modalIn { from{opacity:0;transform:scale(0.95) translateY(8px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .modal-title { font-family:'Playfair Display',serif; font-size:0.98rem; font-weight:700; color:var(--brown); margin-bottom:11px; display:flex; justify-content:space-between; align-items:center; }
+  .modal-close { background:none; border:none; font-size:1.05rem; cursor:pointer; color:var(--slate); }
+
+  .radio-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:9px; }
+  .radio-opt { border:1.5px solid var(--border); border-radius:10px; padding:9px 11px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:6px; font-size:0.83rem; font-weight:500; }
+  .radio-opt:hover { border-color:var(--amber); }
+  .radio-opt input[type=radio] { width:auto; margin:0; padding:0; border:none; box-shadow:none; background:none; }
+  .radio-opt.selected-date  { border-color:var(--rose); background:var(--rose-light); color:var(--rose); }
+  .radio-opt.selected-watch { border-color:var(--sage); background:var(--sage-light); color:var(--sage); }
+
+  @media(max-width:400px) { .form-row{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo-emoji">🏠</span>
+  <h1>Families Night <span>Out</span></h1>
+  <p>Babysitting Co-op · Families helping families</p>
+  <p style="font-size:0.62rem;opacity:0.3;margin-top:3px;letter-spacing:0.5px;">v5.1</p>
+</header>
+
+<!-- NEEDS COVERAGE ALERT BAR — shown when unconfirmed date nights exist -->
+<div class="coverage-bar" id="coverageBar" onclick="showTab('schedule', document.querySelectorAll('.tab-btn')[2])">
+  <div class="coverage-bar-inner">
+    <div>
+      <p>🔶 Date nights need watchers!</p>
+      <span id="coverageBarText">Tap to see which nights need coverage</span>
+    </div>
+    <div style="font-size:1.2rem;">›</div>
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="showTab('families',this)">👨‍👩‍👧 Families</button>
+  <button class="tab-btn" onclick="showTab('signup',this)">✏️ Sign Up</button>
+  <button class="tab-btn" onclick="showTab('schedule',this)">📋 Nights</button>
+  <button class="tab-btn" onclick="showTab('calendar',this)">📆 Calendar</button>
+  <button class="tab-btn" onclick="showTab('alert',this)">📱 Text</button>
+</div>
+
+<div class="main">
+
+  <!-- FAMILIES -->
+  <div id="tab-families" class="tab-panel active">
+    <p class="section-label">Registered Families</p>
+    <div class="card">
+      <div class="card-title">➕ Add a Family</div>
+      <label>Last Name</label>
+      <input type="text" id="famLastName" placeholder="Johnson" />
+      <div style="background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--amber);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Parent 1</div>
+        <div class="form-row">
+          <div><label>First Name</label><input type="text" id="fam1Name" placeholder="Mike" /></div>
+          <div><label>Phone</label><input type="tel" id="fam1Phone" placeholder="916-555-0100" /></div>
+        </div>
+      </div>
+      <div style="background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--sage);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Parent 2 <span style="font-weight:400;opacity:0.6;">(optional)</span></div>
+        <div class="form-row">
+          <div><label>First Name</label><input type="text" id="fam2Name" placeholder="Sarah" /></div>
+          <div><label>Phone</label><input type="tel" id="fam2Phone" placeholder="916-555-0101" /></div>
+        </div>
+      </div>
+      <label>Kids (names & ages)</label>
+      <input type="text" id="famKids" placeholder="Emma (4), Jake (2)" />
+      <label>Notes for babysitters</label>
+      <textarea id="famNotes" placeholder="Allergies, bedtime, schedule, favorite snacks..."></textarea>
+      <div id="famStatus"></div>
+      <button class="btn btn-primary" onclick="addFamily()">Add Family — Starts with 2 Credits ✨</button>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">All Families</p>
+    <div id="familyList" class="family-list">
+      <div class="empty-state"><div class="icon">👨‍👩‍👧</div><p>No families yet.</p></div>
+    </div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div id="tab-calendar" class="tab-panel">
+    <p class="section-label">Two-Month View</p>
+    <div class="cal-legend">
+      <div class="leg-item"><div class="leg-swatch leg-needs"></div> Needs Watchers</div>
+      <div class="leg-item"><div class="leg-swatch leg-confirmed"></div> Confirmed ✓</div>
+      <div class="leg-item"><div class="leg-swatch leg-open"></div> Open</div>
+    </div>
+    <div id="calContainer"></div>
+    <div id="dayDetail"></div>
+  </div>
+
+  <!-- NIGHTS LIST -->
+  <div id="tab-schedule" class="tab-panel">
+    <p class="section-label">Upcoming Nights</p>
+
+    <!-- Needs Coverage section -->
+    <div id="needsCoverageSection"></div>
+
+    <!-- Confirmed section -->
+    <div id="confirmedSection"></div>
+
+    <div id="scheduleEmpty" style="display:none;">
+      <div class="empty-state"><div class="icon">📅</div><p>No signups yet. Be the first!</p></div>
+    </div>
+  </div>
+
+  <!-- SIGN UP -->
+  <div id="tab-signup" class="tab-panel">
+    <p class="section-label">Sign Up for a Night</p>
+    <div class="card">
+      <div class="card-title">🗓️ Choose a Night</div>
+      <label>Select Date <span style="color:var(--slate);font-weight:400;font-size:0.68rem;">(next 2 months)</span></label>
+      <select id="signupDate"></select>
+      <label>Your Family</label>
+      <select id="signupFamily"></select>
+      <label>Time Window <span style="color:var(--slate);font-weight:400;font-size:0.68rem;">(select all that work)</span></label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;" id="timeBlocks">
+        <label class="radio-opt" id="tb-8" onclick="toggleTime(this,'8-11')">
+          <input type="checkbox" name="timeblock" value="8-11" style="width:auto;margin:0;padding:0;border:none;box-shadow:none;background:none;" />
+          <span style="font-size:0.8rem;">☀️ 8 – 11am</span>
+        </label>
+        <label class="radio-opt" id="tb-11" onclick="toggleTime(this,'11-2')">
+          <input type="checkbox" name="timeblock" value="11-2" style="width:auto;margin:0;padding:0;border:none;box-shadow:none;background:none;" />
+          <span style="font-size:0.8rem;">🌤 11am – 2pm</span>
+        </label>
+        <label class="radio-opt" id="tb-2" onclick="toggleTime(this,'2-5')">
+          <input type="checkbox" name="timeblock" value="2-5" style="width:auto;margin:0;padding:0;border:none;box-shadow:none;background:none;" />
+          <span style="font-size:0.8rem;">🌇 2 – 5pm</span>
+        </label>
+        <label class="radio-opt" id="tb-5" onclick="toggleTime(this,'5-8')">
+          <input type="checkbox" name="timeblock" value="5-8" style="width:auto;margin:0;padding:0;border:none;box-shadow:none;background:none;" />
+          <span style="font-size:0.8rem;">🌆 5 – 8pm</span>
+        </label>
+        <label class="radio-opt" id="tb-6" onclick="toggleTime(this,'6-9')">
+          <input type="checkbox" name="timeblock" value="6-9" style="width:auto;margin:0;padding:0;border:none;box-shadow:none;background:none;" />
+          <span style="font-size:0.8rem;">🌙 6 – 9pm</span>
+        </label>
+      </div>
+      <label>Role for this night</label>
+      <div class="radio-row">
+        <label class="radio-opt" id="opt-date" onclick="selectRole('date')">
+          <input type="radio" name="role" value="date" /> ❤️ Date Night
+        </label>
+        <label class="radio-opt" id="opt-watch" onclick="selectRole('watch')">
+          <input type="radio" name="role" value="watch" /> 🏠 Watching Kids
+        </label>
+      </div>
+      <div id="signupStatus"></div>
+      <button class="btn btn-primary" onclick="submitSignup()">Sign Me Up!</button>
+    </div>
+
+    <!-- Needs coverage quick-claim section -->
+    <div id="needsCoverageQuick"></div>
+  </div>
+
+  <!-- TEXT ALERTS -->
+  <div id="tab-alert" class="tab-panel">
+    <p class="section-label">Send a Group Text</p>
+
+    <!-- Coverage needed alert -->
+    <div class="coverage-alert-panel">
+      <h3>🔶 Coverage Needed Alert</h3>
+      <p>Send a blast to ALL families when a date night needs watchers</p>
+      <label>Select Night That Needs Coverage</label>
+      <select id="coverageAlertDate" style="color:white;"></select>
+      <div id="coverageAlertStatus"></div>
+      <button class="btn" style="background:white;color:var(--orange);width:100%;padding:12px;font-weight:700;" onclick="sendCoverageAlert()">📣 Text All Families — We Need Watchers!</button>
+    </div>
+
+    <!-- Standard reminder -->
+    <div class="alert-panel">
+      <h3>📱 General Reminder</h3>
+      <p>Send a reminder to everyone signed up for a specific night</p>
+      <label>Select Night</label>
+      <select id="alertDate" style="color:var(--cream);"></select>
+      <label>Message</label>
+      <textarea id="alertMessage" placeholder="Reminder for Friday! The Johnson house is hosting at 6pm..." style="color:var(--cream);"></textarea>
+      <div id="alertStatus"></div>
+      <button class="btn btn-sage" onclick="sendTextAlert()">📤 Open in SMS App</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="font-size:0.86rem;">ℹ️ How Texts Work</div>
+      <p style="font-size:0.76rem;color:var(--slate);line-height:1.6;">Both buttons open your phone's native SMS app pre-filled with numbers and message — no accounts or fees needed.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- EDIT FAMILY MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-title"><span>✏️ Edit Family</span><button class="modal-close" onclick="closeEditModal()">✕</button></div>
+    <input type="hidden" id="editFamId" />
+    <label>Last Name</label>
+    <input type="text" id="editLastName" />
+    <div style="background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;">
+      <div style="font-size:0.72rem;font-weight:700;color:var(--amber);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Parent 1</div>
+      <div class="form-row">
+        <div><label>First Name</label><input type="text" id="editP1Name" /></div>
+        <div><label>Phone</label><input type="tel" id="editP1Phone" /></div>
+      </div>
+    </div>
+    <div style="background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;">
+      <div style="font-size:0.72rem;font-weight:700;color:var(--sage);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Parent 2 <span style="font-weight:400;opacity:0.6;">(optional)</span></div>
+      <div class="form-row">
+        <div><label>First Name</label><input type="text" id="editP2Name" /></div>
+        <div><label>Phone</label><input type="tel" id="editP2Phone" /></div>
+      </div>
+    </div>
+    <label>Kids (names & ages)</label>
+    <input type="text" id="editKids" />
+    <label>Notes for babysitters</label>
+    <textarea id="editNotes"></textarea>
+    <div id="editStatus"></div>
+    <div style="display:flex;gap:8px;margin-top:4px;">
+      <button class="btn btn-primary" style="flex:2" onclick="saveEditFamily()">Save Changes</button>
+      <button class="btn" style="flex:1;background:var(--rose-light);color:var(--rose);border:1.5px solid var(--rose);" onclick="confirmRemoveFamily()">🗑 Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTES MODAL -->
+<div class="modal-overlay" id="notesModal">
+  <div class="modal">
+    <div class="modal-title"><span>📝 Family Notes</span><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztKR2vfHwe_gU7Hs8HFUh71gLD5Nlsmv5bafdlcnixcliG-0VLGC2ZdDxqGWjeB3gTRg/exec';
+const SHEET_ID   = '1Q0JnE30XpF7uIKLC12fXaflMCyH_Mk745ag9IRECaVw';
+
+// Sheet tab GIDs — found in your Google Sheet URL when clicking each tab
+// Click the Families tab → note the gid= number in the URL
+// Click the Signups tab → note the gid= number
+// The gid in your shared URL was 1840558341
+const SHEET_TABS = {
+  Families: 1098037614,  // your Families tab GID
+  Signups:  1840558341   // your Signups tab GID
+};
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let families = [];
+let signups  = [];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let calViewMonth = new Date().getMonth();
+let calViewYear  = new Date().getFullYear();
+
+// ══════════════════════════════════════════════════════
+// ROLLING 2-MONTH DATES
+// ══════════════════════════════════════════════════════
+function getRollingDates() {
+  const dates = [];
+  const today = new Date(); today.setHours(0,0,0,0);
+  const end   = new Date(today); end.setMonth(end.getMonth() + 2);
+  const cur   = new Date(today);
+  while (cur <= end) { dates.push(cur.toISOString().split('T')[0]); cur.setDate(cur.getDate()+1); }
+  return dates;
+}
+
+// ══════════════════════════════════════════════════════
+// NIGHT STATUS HELPERS
+// isConfirmed  = has ≥1 date signup AND ≥1 watch signup
+// needsCoverage = has ≥1 date signup but 0 watch signups
+// ══════════════════════════════════════════════════════
+function nightStatus(date) {
+  const ds = signups.filter(s => s.date === date);
+  const hasDate  = ds.some(s => s.role === 'date');
+  const hasWatch = ds.some(s => s.role === 'watch');
+  if (hasDate && hasWatch)  return 'confirmed';
+  if (hasDate && !hasWatch) return 'needs-coverage';
+  if (!hasDate && hasWatch) return 'watch-only';
+  return 'open';
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  populateSignupDates();
+  renderCalendar();
+  loadAll();
+});
+
+// ══════════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  loadAll();
+  if (name === 'calendar') renderCalendar();
+}
+
+// ══════════════════════════════════════════════════════
+// CSV READ — reads directly from published Google Sheet
+// No CORS issues. Sheet must be shared as "Anyone can view"
+// ══════════════════════════════════════════════════════
+async function readSheetCSV(gid) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Could not read sheet (HTTP ' + res.status + ')');
+  const text = await res.text();
+  return parseCSV(text);
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = parseCSVRow(lines[0]);
+  return lines.slice(1).map(line => {
+    const vals = parseCSVRow(line);
+    const obj = {};
+    headers.forEach((h, i) => obj[h.trim()] = (vals[i] || '').trim());
+    return obj;
+  }).filter(r => Object.values(r).some(v => v !== ''));
+}
+
+function parseCSVRow(line) {
+  const result = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"' && !inQ) { inQ = true; }
+    else if (c === '"' && inQ) {
+      if (line[i+1] === '"') { cur += '"'; i++; }
+      else inQ = false;
+    } else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
+    else cur += c;
+  }
+  result.push(cur);
+  return result;
+}
+
+// ══════════════════════════════════════════════════════
+// WRITE — fire-and-forget to Apps Script (no response needed)
+// ══════════════════════════════════════════════════════
+function writeToSheet(action, data = {}) {
+  let qs = 'action=' + encodeURIComponent(action);
+  Object.entries(data).forEach(([k, v]) => {
+    if (v !== undefined && v !== null) {
+      qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(String(v));
+    }
+  });
+  // Use an image tag — zero CORS, no response needed, just fires the request
+  const img = new Image();
+  img.src = SCRIPT_URL + '?' + qs + '&_t=' + Date.now();
+}
+
+// ══════════════════════════════════════════════════════
+// LOAD ALL — reads CSV from Google Sheets directly
+// ══════════════════════════════════════════════════════
+let loadAllInProgress = false;
+async function loadAll() {
+  if (loadAllInProgress) return;
+  loadAllInProgress = true;
+  try {
+    // Fetch both sheets in parallel
+    const [fams, sigs] = await Promise.all([
+      readSheetCSV(SHEET_TABS.Families),
+      readSheetCSV(SHEET_TABS.Signups)
+    ]);
+    families = fams;
+    signups  = sigs;
+    renderFamilies();
+    renderSchedule();
+    renderCalendar();
+    populateDropdowns();
+    updateCoverageBar();
+    renderNeedsCoverageQuick();
+  } catch(e) {
+    console.warn('Load failed:', e.message);
+    const errHtml = `<div style="background:var(--rose-light);border:1px solid var(--rose);border-radius:12px;padding:14px;font-size:0.82rem;color:var(--rose);line-height:1.6;">
+      ⚠️ <strong>Cannot read from Google Sheets.</strong><br><br>
+      Make sure your sheet is shared: click <strong>Share → Anyone with the link → Viewer</strong>.<br><br>
+      <em style="opacity:0.7;">${e.message}</em>
+    </div>`;
+    const fl = document.getElementById('familyList');
+    if (fl && !families.length) fl.innerHTML = errHtml;
+    const nc = document.getElementById('needsCoverageSection');
+    if (nc && !signups.length) nc.innerHTML = errHtml;
+  } finally {
+    loadAllInProgress = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// COVERAGE BAR (top of page)
+// ══════════════════════════════════════════════════════
+function updateCoverageBar() {
+  const rolling = new Set(getRollingDates());
+  const needsDates = [...new Set(signups.map(s => s.date))]
+    .filter(d => rolling.has(d) && nightStatus(d) === 'needs-coverage')
+    .sort();
+  const bar = document.getElementById('coverageBar');
+  if (needsDates.length) {
+    bar.classList.add('visible');
+    document.getElementById('coverageBarText').textContent =
+      needsDates.length === 1
+        ? `${formatDate(needsDates[0])} needs a watching family`
+        : `${needsDates.length} nights need watching families`;
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// ADD FAMILY
+// ══════════════════════════════════════════════════════
+async function addFamily() {
+  const lastName  = document.getElementById('famLastName').value.trim();
+  const p1Name    = document.getElementById('fam1Name').value.trim();
+  const p1Phone   = document.getElementById('fam1Phone').value.trim();
+  const p2Name    = document.getElementById('fam2Name').value.trim();
+  const p2Phone   = document.getElementById('fam2Phone').value.trim();
+  const kids      = document.getElementById('famKids').value.trim();
+  const notes     = document.getElementById('famNotes').value.trim();
+  if (!lastName || !p1Name) { showStatus('famStatus','Last name and Parent 1 name are required','error'); return; }
+  const parents = p2Name ? `${p1Name} & ${p2Name}` : p1Name;
+  const phone   = p1Phone; // primary phone for alerts
+  showStatus('famStatus','<span class="spinner"></span> Saving...','loading');
+  try {
+    writeToSheet('addFamily', { lastName, parents, phone, p1Name, p1Phone, p2Name, p2Phone, kids, notes });
+    await sleep(1800);
+    showStatus('famStatus', `✅ The ${lastName} family added with 2 starting credits!`, 'success');
+    ['famLastName','fam1Name','fam1Phone','fam2Name','fam2Phone','famKids','famNotes'].forEach(id => document.getElementById(id).value = '');
+    await loadAll();
+  } catch(e) { showStatus('famStatus','❌ ' + e.message,'error'); }
+}
+
+// ══════════════════════════════════════════════════════
+// SIGNUP
+// ══════════════════════════════════════════════════════
+function toggleTime(labelEl, tb) {
+  // checkbox toggled by the click — read its new state
+  const cb = labelEl.querySelector('input[type=checkbox]');
+  if (cb.checked) {
+    labelEl.classList.add('selected-watch');
+  } else {
+    labelEl.classList.remove('selected-watch');
+  }
+}
+
+function clearTimeBlocks() {
+  document.querySelectorAll('#timeBlocks input[type=checkbox]').forEach(cb => { cb.checked = false; });
+  document.querySelectorAll('#timeBlocks .radio-opt').forEach(el => el.classList.remove('selected-watch'));
+}
+
+function getSelectedTimes() {
+  return [...document.querySelectorAll('#timeBlocks input[type=checkbox]:checked')].map(cb => cb.value);
+}
+
+function selectRole(role) {
+  document.querySelectorAll('.radio-opt:not(#timeBlocks .radio-opt)').forEach(el => el.classList.remove('selected-date','selected-watch'));
+  document.querySelector(`input[value="${role}"]`).checked = true;
+  document.getElementById('opt-' + role).classList.add('selected-' + role);
+}
+
+// Pre-select a watch role and clear time selections when jumping from coverage prompt
+function preselectWatch() {
+  selectRole('watch');
+  clearTimeBlocks();
+}
+
+const TIME_LABELS = {'8-11':'8–11am','11-2':'11am–2pm','2-5':'2–5pm','5-8':'5–8pm','6-9':'6–9pm'};
+
+async function submitSignup() {
+  const date      = document.getElementById('signupDate').value;
+  const familyId  = document.getElementById('signupFamily').value;
+  const role      = document.querySelector('input[name="role"]:checked')?.value;
+  const timeblocks = getSelectedTimes();
+  if (!date || !familyId || !role || !timeblocks.length) { showStatus('signupStatus','Please fill in all fields and select at least one time window','error'); return; }
+  const timeblock = timeblocks.join(',');
+
+  const fam = families.find(f => f.id === familyId);
+  if (role === 'date' && fam && parseInt(fam.credits || 0) <= 0) {
+    showStatus('signupStatus','⚠️ You need at least 1 credit for a date night. Watch kids first to earn credits!','error');
+    return;
+  }
+
+  showStatus('signupStatus','<span class="spinner"></span> Signing up...','loading');
+  try {
+    writeToSheet('addSignup', { date, familyId, role, timeblock });
+    await sleep(1800);
+    const confirmed = role === 'watch'
+      ? signups.filter(s => s.date === date && s.role === 'date').length > 0
+      : false;
+    showStatus('signupStatus',
+      role === 'date'
+        ? `✅ You're on for ❤️ Date Night on ${formatDate(date)}, ${timeblocks.map(t=>TIME_LABELS[t]).join(' & ')}! We'll alert the group for watchers.`
+        : confirmed
+          ? `✅ You're watching kids on ${formatDate(date)} — night is now confirmed! 🎉`
+          : `✅ Signed up to 🏠 Watch Kids on ${formatDate(date)}!`,
+      'success');
+    await loadAll();
+  } catch(e) { showStatus('signupStatus','❌ ' + e.message,'error'); }
+}
+
+// Quick-claim watcher from needs-coverage card
+async function claimWatcher(date, familyId) {
+  if (!familyId) { alert('Select your family first'); return; }
+  showStatus('signupStatus','<span class="spinner"></span> Claiming...','loading');
+  try {
+    writeToSheet('addSignup', { date, familyId, role:'watch' });
+    await sleep(1800);
+    showStatus('signupStatus', `✅ You're watching kids on ${formatDate(date)}! Night is now confirmed 🎉`, 'success');
+    await loadAll();
+  } catch(e) { showStatus('signupStatus','❌ ' + e.message,'error'); }
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER FAMILIES
+// ══════════════════════════════════════════════════════
+function renderFamilies() {
+  const el = document.getElementById('familyList');
+  if (!families.length) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">👨‍👩‍👧</div><p>No families yet.</p></div>'; return;
+  }
+  el.innerHTML = families.map(f => {
+    const credits = parseInt(f.credits || 0);
+    const safeF   = encodeURIComponent(JSON.stringify(f));
+    // Build parent detail lines
+    let parentLines = '';
+    if (f.p1Name) {
+      parentLines += `<div style="font-size:0.71rem;color:var(--slate);">👤 ${f.p1Name}${f.p1Phone ? ' · <a href="tel:'+f.p1Phone+'" style="color:var(--amber);text-decoration:none;">'+f.p1Phone+'</a>' : ''}</div>`;
+    } else if (f.parents) {
+      parentLines += `<div style="font-size:0.71rem;color:var(--slate);">${f.parents}${f.phone ? ' · ' + f.phone : ''}</div>`;
+    }
+    if (f.p2Name) {
+      parentLines += `<div style="font-size:0.71rem;color:var(--slate);">👤 ${f.p2Name}${f.p2Phone ? ' · <a href="tel:'+f.p2Phone+'" style="color:var(--amber);text-decoration:none;">'+f.p2Phone+'</a>' : ''}</div>`;
+    }
+    return `
+      <div class="family-item">
+        <div class="family-avatar">${f.lastName.charAt(0).toUpperCase()}</div>
+        <div class="family-info">
+          <div class="family-name">The ${f.lastName} Family</div>
+          ${parentLines}
+          ${f.kids ? `<div style="font-size:0.71rem;color:var(--slate);">👶 ${f.kids}</div>` : ''}
+          <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap;">
+            ${f.notes ? `<button class="notes-pill" onclick="showNotes(decodeURIComponent('${safeF}'))">📝 Notes</button>` : ''}
+            <button class="notes-pill" style="background:var(--sage-light);color:var(--sage);" onclick="openEditModal(decodeURIComponent('${safeF}'))">✏️ Edit</button>
+          </div>
+        </div>
+        <span class="family-credits ${credits<=0?'credits-zero':''}">${credits} credit${credits!==1?'s':''}</span>
+      </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER SCHEDULE — split into Needs Coverage + Confirmed
+// ══════════════════════════════════════════════════════
+function renderSchedule() {
+  const rolling = new Set(getRollingDates());
+  const activeDates = [...new Set(signups.map(s => s.date))]
+    .filter(d => rolling.has(d)).sort();
+
+  const needsEl     = document.getElementById('needsCoverageSection');
+  const confirmedEl = document.getElementById('confirmedSection');
+  const emptyEl     = document.getElementById('scheduleEmpty');
+
+  if (!activeDates.length) {
+    needsEl.innerHTML = ''; confirmedEl.innerHTML = '';
+    emptyEl.style.display = 'block'; return;
+  }
+  emptyEl.style.display = 'none';
+
+  const needsDates     = activeDates.filter(d => nightStatus(d) === 'needs-coverage');
+  const confirmedDates = activeDates.filter(d => ['confirmed','watch-only'].includes(nightStatus(d)));
+
+  // Needs Coverage section
+  if (needsDates.length) {
+    needsEl.innerHTML = `<p class="section-label" style="color:var(--orange);">🔶 Needs Watchers (${needsDates.length})</p>` +
+      needsDates.map(date => slotCardHTML(date, 'needs-coverage')).join('');
+  } else {
+    needsEl.innerHTML = '';
+  }
+
+  // Confirmed section
+  if (confirmedDates.length) {
+    confirmedEl.innerHTML = `<p class="section-label" style="margin-top:${needsDates.length?'6px':'0'};">✅ Confirmed Nights</p>` +
+      confirmedDates.map(date => slotCardHTML(date, nightStatus(date))).join('');
+  } else {
+    confirmedEl.innerHTML = '';
+  }
+}
+
+function slotCardHTML(date, status) {
+  const ds        = signups.filter(s => s.date === date);
+  const dateNight = ds.filter(s => s.role === 'date');
+  const watchers  = ds.filter(s => s.role === 'watch');
+  const ds_time   = ds.length > 0 ? ds[0].timeblock : null;
+  const timeLabel = ds_time ? TIME_LABELS[ds_time] || '6–9pm' : '6–9pm';
+  const dateStr   = formatDateLong(date);
+
+  const renderRow = (s, isHost) => {
+    const fam  = families.find(f => f.id === s.familyId);
+    const name = fam ? `The ${fam.lastName} Family` : 'Unknown';
+    const times = s.timeblock ? s.timeblock.split(',').map(t => TIME_LABELS[t]||t).join(', ') : '';
+    return `<div class="slot-signup">👨‍👩‍👧 ${name}${isHost?'<span class="host-badge">🏠 HOST</span>':''}${times?`<span style="margin-left:auto;font-size:0.65rem;color:var(--slate);">${times}</span>`:''}</div>`;
+  };
+
+  const coverageCTA = status === 'needs-coverage' ? `
+    <div class="coverage-cta">
+      <p>🙋 Can your family watch?</p>
+      <button onclick="jumpToSignupForDate('${date}')">Sign Up to Watch</button>
+    </div>` : '';
+
+  const badgeClass = status === 'confirmed' ? 'badge-confirmed'
+                   : status === 'needs-coverage' ? 'badge-needs-coverage'
+                   : 'badge-open';
+  const badgeText  = status === 'confirmed' ? '✓ Confirmed'
+                   : status === 'needs-coverage' ? '⚠ Needs Watchers'
+                   : 'Open';
+
+  return `
+    <div class="slot-card ${status === 'needs-coverage' ? 'needs-coverage' : status === 'confirmed' ? 'confirmed' : ''}">
+      <div class="slot-header">
+        <div><div class="slot-date">${dateStr}</div><div class="slot-time">6:00 – 9:00 PM</div></div>
+        <span class="status-badge ${badgeClass}">${badgeText}</span>
+      </div>
+      <div class="slot-section-title date-title">❤️ Date Night</div>
+      ${dateNight.length ? dateNight.map(s => renderRow(s,false)).join('') : '<div class="slot-empty">Open</div>'}
+      <div class="slot-section-title watch-title">🏠 Watching Kids</div>
+      ${watchers.length ? watchers.map((s,i) => renderRow(s,i===0)).join('') : '<div class="slot-empty">No watchers yet</div>'}
+      ${coverageCTA}
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// NEEDS COVERAGE QUICK PANEL (on signup tab)
+// ══════════════════════════════════════════════════════
+function renderNeedsCoverageQuick() {
+  const el = document.getElementById('needsCoverageQuick');
+  const rolling = new Set(getRollingDates());
+  const needsDates = [...new Set(signups.map(s => s.date))]
+    .filter(d => rolling.has(d) && nightStatus(d) === 'needs-coverage').sort();
+
+  if (!needsDates.length) { el.innerHTML = ''; return; }
+
+  el.innerHTML = `
+    <div class="divider"></div>
+    <p class="section-label" style="color:var(--orange);">🔶 These Nights Need Watchers</p>
+    ${needsDates.map(d => `
+      <div style="background:var(--orange-light);border:1.5px solid var(--orange);border-radius:12px;padding:12px 14px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <div>
+          <div style="font-weight:600;font-size:0.88rem;color:var(--brown);">${formatDateLong(d)}</div>
+          <div style="font-size:0.72rem;color:var(--orange);margin-top:2px;">A family is going on a date — needs coverage!</div>
+        </div>
+        <button class="btn" style="background:var(--orange);color:white;padding:8px 12px;font-size:0.75rem;white-space:nowrap;" onclick="jumpToSignupForDate('${d}')">Watch Kids</button>
+      </div>`).join('')}`;
+}
+
+// ══════════════════════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════════════════════
+function renderCalendar() {
+  const container = document.getElementById('calContainer');
+  if (!container) return;
+  const today   = new Date(); today.setHours(0,0,0,0);
+  const rolling = new Set(getRollingDates());
+
+  const lookup = {};
+  signups.forEach(s => {
+    if (!lookup[s.date]) lookup[s.date] = { dates:[], watches:[] };
+    if (s.role === 'date') lookup[s.date].dates.push(s);
+    else lookup[s.date].watches.push(s);
+  });
+
+  let html = '';
+  for (let mo = 0; mo < 2; mo++) {
+    const d    = new Date(calViewYear, calViewMonth + mo, 1);
+    const yr   = d.getFullYear();
+    const mn   = d.getMonth();
+    const name = d.toLocaleDateString('en-US', { month:'long', year:'numeric' });
+    const firstDow     = new Date(yr, mn, 1).getDay();
+    const daysInMonth  = new Date(yr, mn+1, 0).getDate();
+
+    html += `<div style="margin-bottom:20px;">`;
+    html += `<div class="cal-nav">`;
+    html += mo===0 ? `<button class="cal-arrow" onclick="calNav(-1)">‹</button>` : `<div style="width:32px"></div>`;
+    html += `<div class="cal-month">${name}</div>`;
+    html += mo===1 ? `<button class="cal-arrow" onclick="calNav(1)">›</button>` : `<div style="width:32px"></div>`;
+    html += `</div><div class="cal-grid">`;
+
+    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => html += `<div class="cal-dow">${d}</div>`);
+    for (let i=0; i<firstDow; i++) html += `<div class="cal-day empty"></div>`;
+
+    for (let day=1; day<=daysInMonth; day++) {
+      const dateStr  = `${yr}-${String(mn+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const thisDate = new Date(yr, mn, day);
+      const isToday  = thisDate.getTime() === today.getTime();
+      const isPast   = thisDate < today;
+      const inRange  = rolling.has(dateStr);
+      const data     = lookup[dateStr];
+      const status   = data ? nightStatus(dateStr) : 'open';
+      const hasSig   = data && (data.dates.length || data.watches.length);
+
+      let cls = 'cal-day';
+      if (!inRange || isPast) cls += ' past';
+      else if (status === 'needs-coverage') cls += ' needs-coverage';
+      else if (status === 'confirmed')      cls += ' confirmed';
+      else if (hasSig)                      cls += ' has-signup';
+      if (isToday) cls += ' today';
+
+      let dots = '';
+      if (data) {
+        data.dates.forEach(()   => dots += `<div class="day-dot dot-date"></div>`);
+        data.watches.forEach(() => dots += `<div class="day-dot dot-watch"></div>`);
+      }
+
+      const onclick = hasSig
+        ? `showDayDetail('${dateStr}')`
+        : (inRange && !isPast ? `jumpToSignupForDate('${dateStr}')` : '');
+
+      html += `<div class="${cls}" onclick="${onclick}">
+        <div class="day-num">${day}</div>
+        ${dots ? `<div class="day-dots">${dots}</div>` : ''}
+      </div>`;
+    }
+    html += `</div></div>`;
+  }
+  container.innerHTML = html;
+}
+
+function calNav(dir) {
+  calViewMonth += dir;
+  if (calViewMonth > 11) { calViewMonth=0; calViewYear++; }
+  if (calViewMonth <  0) { calViewMonth=11; calViewYear--; }
+  renderCalendar();
+  document.getElementById('dayDetail').innerHTML = '';
+}
+
+function showDayDetail(dateStr) {
+  const el        = document.getElementById('dayDetail');
+  const ds        = signups.filter(s => s.date === dateStr);
+  const dateNight = ds.filter(s => s.role === 'date');
+  const watchers  = ds.filter(s => s.role === 'watch');
+  const status    = nightStatus(dateStr);
+  const label     = formatDateLong(dateStr);
+
+  const renderRow = (s, isHost) => {
+    const fam  = families.find(f => f.id === s.familyId);
+    const name = fam ? `The ${fam.lastName} Family` : 'Unknown';
+    const times = s.timeblock ? s.timeblock.split(',').map(t => TIME_LABELS[t]||t).join(', ') : '';
+    return `<div class="slot-signup">👨‍👩‍👧 ${name}${isHost?'<span class="host-badge">🏠 HOST</span>':''}${times?`<span style="margin-left:auto;font-size:0.65rem;color:var(--slate);">${times}</span>`:''}</div>`;
+  };
+
+  const badgeClass = status==='confirmed' ? 'badge-confirmed' : status==='needs-coverage' ? 'badge-needs-coverage' : 'badge-open';
+  const badgeText  = status==='confirmed' ? '✓ Confirmed' : status==='needs-coverage' ? '⚠ Needs Watchers' : 'Open';
+
+  const detailClass = status==='confirmed' ? 'detail-confirmed' : status==='needs-coverage' ? 'detail-needs' : '';
+
+  el.innerHTML = `
+    <div class="day-detail ${detailClass}">
+      <div class="day-detail-title">
+        <div>
+          <div>${label}</div>
+          <span class="status-badge ${badgeClass}" style="margin-top:5px;display:inline-flex;">${badgeText}</span>
+        </div>
+        <button class="detail-close" onclick="document.getElementById('dayDetail').innerHTML=''">✕</button>
+      </div>
+      <div style="font-size:0.7rem;color:var(--slate);margin-bottom:9px;">6:00 – 9:00 PM</div>
+      <div class="slot-section-title date-title">❤️ Date Night</div>
+      ${dateNight.length ? dateNight.map(s => renderRow(s,false)).join('') : '<div class="slot-empty">No one yet</div>'}
+      <div class="slot-section-title watch-title">🏠 Watching Kids</div>
+      ${watchers.length ? watchers.map((s,i) => renderRow(s,i===0)).join('') : '<div class="slot-empty">No watchers yet</div>'}
+      ${status==='needs-coverage' ? `
+        <div class="coverage-cta" style="margin-top:10px;">
+          <p>🙋 Can your family watch?</p>
+          <button onclick="jumpToSignupForDate('${dateStr}')">Sign Up to Watch</button>
+        </div>` : ''}
+      <div style="margin-top:10px;">
+        <button class="btn btn-secondary" style="width:100%" onclick="jumpToSignupForDate('${dateStr}')">✏️ Sign Up for This Night</button>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// NAVIGATION HELPERS
+// ══════════════════════════════════════════════════════
+function jumpToSignupForDate(dateStr) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-signup').classList.add('active');
+  document.querySelectorAll('.tab-btn')[1].classList.add('active');
+  document.getElementById('signupDate').value = dateStr;
+  // Pre-select watch role when coming from a needs-coverage prompt
+  preselectWatch();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════════════════════
+// DROPDOWNS
+// ══════════════════════════════════════════════════════
+function populateSignupDates() {
+  const sel = document.getElementById('signupDate');
+  sel.innerHTML = '<option value="">— pick a date —</option>';
+  getRollingDates().forEach(d => {
+    sel.innerHTML += `<option value="${d}">${new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</option>`;
+  });
+}
+
+function populateDropdowns() {
+  const rolling = new Set(getRollingDates());
+
+  // Coverage alert dropdown — only needs-coverage nights
+  const covSel = document.getElementById('coverageAlertDate');
+  const covVal = covSel.value;
+  covSel.innerHTML = '<option value="">— choose a date —</option>';
+  const needsDates = [...new Set(signups.map(s=>s.date))].filter(d=>rolling.has(d)&&nightStatus(d)==='needs-coverage').sort();
+  needsDates.forEach(d => covSel.innerHTML += `<option value="${d}">${formatDate(d)}</option>`);
+  if (covVal) covSel.value = covVal;
+
+  // General alert dropdown — all nights with signups
+  const alertSel = document.getElementById('alertDate');
+  const alertVal = alertSel.value;
+  alertSel.innerHTML = '<option value="">— choose a date —</option>';
+  [...new Set(signups.map(s=>s.date))].filter(d=>rolling.has(d)).sort().forEach(d => {
+    alertSel.innerHTML += `<option value="${d}">${formatDate(d)}</option>`;
+  });
+  if (alertVal) alertSel.value = alertVal;
+
+  // Family dropdown
+  const famSel = document.getElementById('signupFamily');
+  const famVal = famSel.value;
+  famSel.innerHTML = '<option value="">— select your family —</option>';
+  families.forEach(f => famSel.innerHTML += `<option value="${f.id}">The ${f.lastName} Family (${f.parents})</option>`);
+  if (famVal) famSel.value = famVal;
+}
+
+// ══════════════════════════════════════════════════════
+// TEXT ALERTS
+// ══════════════════════════════════════════════════════
+function sendCoverageAlert() {
+  const date = document.getElementById('coverageAlertDate').value;
+  if (!date) { showStatus('coverageAlertStatus','Choose a date first','error'); return; }
+
+  // Text ALL families (excluding those already signed up for this date)
+  const phones = [];
+  families.forEach(f => {
+    if (f.p1Phone) phones.push(f.p1Phone);
+    else if (f.phone) phones.push(f.phone);
+    if (f.p2Phone) phones.push(f.p2Phone);
+  });
+  if (!phones.length) { showStatus('coverageAlertStatus','No phone numbers on file yet','error'); return; }
+
+  const dateLabel = formatDateLong(date);
+  const msg = `🔶 Coverage Needed! A family is going on a date night — ${dateLabel}, 6-9pm. Can your family watch the kids? Sign up at our Families Night Out app!`;
+  showStatus('coverageAlertStatus', `✅ Opening SMS to ${phones.length} families...`, 'success');
+  window.location.href = `sms:${phones.join(',')}?body=${encodeURIComponent(msg)}`;
+}
+
+function sendTextAlert() {
+  const date    = document.getElementById('alertDate').value;
+  const message = document.getElementById('alertMessage').value.trim();
+  if (!date || !message) { showStatus('alertStatus','Choose a date and write a message','error'); return; }
+  const phones = [];
+  signups.filter(s=>s.date===date).forEach(s => {
+    const fam = families.find(f=>f.id===s.familyId);
+    if (fam) {
+      if (fam.p1Phone) phones.push(fam.p1Phone);
+      else if (fam.phone) phones.push(fam.phone);
+      if (fam.p2Phone) phones.push(fam.p2Phone);
+    }
+  });
+  if (!phones.length) { showStatus('alertStatus','No phone numbers on file for this night','error'); return; }
+  showStatus('alertStatus', `✅ Opening SMS with ${phones.length} number(s)...`, 'success');
+  window.location.href = `sms:${phones.join(',')}?body=${encodeURIComponent(message)}`;
+}
+
+// ══════════════════════════════════════════════════════
+// NOTES MODAL
+// ══════════════════════════════════════════════════════
+function showNotes(famJson) {
+  const fam = typeof famJson === 'string' ? JSON.parse(famJson) : famJson;
+  document.getElementById('modalContent').innerHTML = `
+    <p style="font-weight:600;font-size:0.9rem;color:var(--brown);margin-bottom:3px;">The ${fam.lastName} Family</p>
+    <p style="font-size:0.73rem;color:var(--slate);margin-bottom:9px;">${fam.parents}${fam.kids?' · 👶 '+fam.kids:''}</p>
+    <div style="background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:0.83rem;line-height:1.7;color:var(--ink);">${fam.notes||'No notes added.'}</div>`;
+  document.getElementById('notesModal').classList.add('open');
+}
+function closeModal() { document.getElementById('notesModal').classList.remove('open'); }
+
+// ══════════════════════════════════════════════════════
+// EDIT / REMOVE FAMILY
+// ══════════════════════════════════════════════════════
+function openEditModal(famJson) {
+  const f = typeof famJson === 'string' ? JSON.parse(famJson) : famJson;
+  document.getElementById('editFamId').value   = f.id;
+  document.getElementById('editLastName').value = f.lastName || '';
+  document.getElementById('editP1Name').value   = f.p1Name  || '';
+  document.getElementById('editP1Phone').value  = f.p1Phone || '';
+  document.getElementById('editP2Name').value   = f.p2Name  || '';
+  document.getElementById('editP2Phone').value  = f.p2Phone || '';
+  document.getElementById('editKids').value     = f.kids    || '';
+  document.getElementById('editNotes').value    = f.notes   || '';
+  document.getElementById('editStatus').className = 'status-msg';
+  document.getElementById('editModal').classList.add('open');
+}
+function closeEditModal() { document.getElementById('editModal').classList.remove('open'); }
+
+async function saveEditFamily() {
+  const id       = document.getElementById('editFamId').value;
+  const lastName = document.getElementById('editLastName').value.trim();
+  const p1Name   = document.getElementById('editP1Name').value.trim();
+  const p1Phone  = document.getElementById('editP1Phone').value.trim();
+  const p2Name   = document.getElementById('editP2Name').value.trim();
+  const p2Phone  = document.getElementById('editP2Phone').value.trim();
+  const kids     = document.getElementById('editKids').value.trim();
+  const notes    = document.getElementById('editNotes').value.trim();
+  if (!lastName || !p1Name) { showStatus('editStatus','Last name and Parent 1 name required','error'); return; }
+  showStatus('editStatus','<span class="spinner"></span> Saving...','loading');
+  try {
+    writeToSheet('editFamily', { id, lastName, p1Name, p1Phone, p2Name, p2Phone, kids, notes });
+    await sleep(1800);
+    showStatus('editStatus','✅ Family updated!','success');
+    await loadAll();
+    setTimeout(closeEditModal, 1500);
+  } catch(e) { showStatus('editStatus','❌ ' + e.message,'error'); }
+}
+
+async function confirmRemoveFamily() {
+  const lastName = document.getElementById('editLastName').value;
+  if (!confirm(`Remove the ${lastName} family? This cannot be undone.`)) return;
+  const id = document.getElementById('editFamId').value;
+  showStatus('editStatus','<span class="spinner"></span> Removing...','loading');
+  try {
+    writeToSheet('removeFamily', { id });
+    await sleep(1800);
+    closeEditModal();
+    await loadAll();
+  } catch(e) { showStatus('editStatus','❌ ' + e.message,'error'); }
+}
+
+// ══════════════════════════════════════════════════════
+// STATUS
+// ══════════════════════════════════════════════════════
+function showStatus(elId, msg, type) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = msg;
+  el.className = 'status-msg status-' + type;
+  if (type === 'success') setTimeout(() => { el.className = 'status-msg'; }, 5000);
+}
+
+// ══════════════════════════════════════════════════════
+// DATE FORMAT HELPERS
+// ══════════════════════════════════════════════════════
+function formatDate(d) {
+  return new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
+function formatDateLong(d) {
+  return new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+}
+</script>
+</body>
+</html>
